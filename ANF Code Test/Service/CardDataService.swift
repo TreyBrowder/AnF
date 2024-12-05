@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol CardDataProtocol {
+protocol CardDataProtocol: Sendable {
     func fetchCardData() async throws -> [ExploreCard]
     func fetchImage(for url: String) async throws -> UIImage
 }
 
-class CardDataService: Networkable, CardDataProtocol {
+actor CardDataService: Networkable, CardDataProtocol {
     
     var baseURL: URLComponents {
         var components = URLComponents()
