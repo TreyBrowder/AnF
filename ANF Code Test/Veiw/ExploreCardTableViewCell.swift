@@ -42,13 +42,19 @@ class ExploreCardTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let bottomDescriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        label.textColor = .gray
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        return label
+    private let bottomDescriptionLabel: UITextView = {
+        let textView = UITextView()
+        textView.font = UIFont.systemFont(ofSize: 12)
+        textView.textColor = .gray
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.dataDetectorTypes = .link
+        textView.textAlignment = .center
+        textView.linkTextAttributes = [
+            .foregroundColor: UIColor.blue,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        return textView
     }()
     
     private let shopMenButton: UIButton = {
@@ -149,6 +155,19 @@ class ExploreCardTableViewCell: UITableViewCell {
         topDescriptionLabel.text = card.topDescription
         titleLabel.text = card.title
         promoMessageLabel.text = card.promoMessage
-        bottomDescriptionLabel.text = card.bottomDescription
+        
+        if let bottomDescription = card.bottomDescription {
+            let attributedString = NSMutableAttributedString(string: "In stores & online. Exclusions apply. ")
+            
+            if let range = bottomDescription.range(of: "See Details"),
+               let hrefStart = bottomDescription.range(of: "href=\""),
+               let hrefEnd = bottomDescription.range(of: "\">", range: hrefStart.upperBound..<bottomDescription.endIndex) {
+                let url = String(bottomDescription[hrefStart.upperBound..<hrefEnd.lowerBound])
+                attributedString.append(NSAttributedString(string: "See Details", attributes: [.link: URL(string: url)!, .foregroundColor: UIColor.blue]))
+            }
+            bottomDescriptionLabel.attributedText = attributedString
+        } else {
+            bottomDescriptionLabel.text = nil
+        }
     }
 }
