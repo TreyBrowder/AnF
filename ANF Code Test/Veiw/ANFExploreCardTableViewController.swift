@@ -6,6 +6,16 @@
 import UIKit
 
 class ANFExploreCardTableViewController: UITableViewController {
+    
+    private let cardVM = CardDataViewModel(service: CardDataService())
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        Task {
+            await cardVM.getCardData()
+        }
+    }
 
     private var exploreData: [[AnyHashable: Any]]? {
         if let filePath = Bundle.main.path(forResource: "exploreData", ofType: "json"),
