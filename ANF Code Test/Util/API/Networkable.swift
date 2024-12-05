@@ -5,7 +5,7 @@
 //  Created by Trey Browder on 12/5/24.
 //
 
-import Foundation
+import UIKit
 
 protocol Networkable {
     func fetchData<T: Decodable>(as type: T.Type, with endpoint: String) async throws -> T
@@ -23,7 +23,18 @@ extension Networkable {
         } catch {
             throw error as? APIError ?? .unknown(error: error)
         }
-        
+    }
+    
+    func fetchImage(from url: String) async throws -> UIImage {
+        guard let url = URL(string: url) else { throw APIError.invalidURL }
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.invalidResponse
+        }
+        guard let image = UIImage(data: data) else {
+            throw APIError.invalidData(msg: "Failed to convert data to UIImage")
+        }
+        return image
     }
 }
 

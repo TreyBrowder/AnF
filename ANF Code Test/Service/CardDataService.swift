@@ -5,10 +5,11 @@
 //  Created by Trey Browder on 12/5/24.
 //
 
-import Foundation
+import UIKit
 
 protocol CardDataProtocol {
     func fetchCardData() async throws -> [ExploreCard]
+    func fetchImage(for url: String) async throws -> UIImage
 }
 
 class CardDataService: Networkable, CardDataProtocol {
@@ -35,5 +36,9 @@ class CardDataService: Networkable, CardDataProtocol {
         
         return try await fetchData(as: [ExploreCard].self, with: endpoint)
         
+    }
+    
+    func fetchImage(for url: String) async throws -> UIImage {
+        return try await fetchImage(from: url)
     }
 }

@@ -30,7 +30,8 @@ class ANFExploreCardTableViewController: UITableViewController {
         return nil
     }
     
-    private let cardVM = CardDataViewModel(service: CardDataService())
+    private let service = CardDataService()
+    private lazy var cardVM = CardDataViewModel(service: service)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +59,7 @@ class ANFExploreCardTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "exploreCardCell", for: indexPath) as? ExploreCardTableViewCell else { return UITableViewCell() }
         
         
-        let cellVM = CellViewModel(card: card)
+        let cellVM = CellViewModel(card: card, imageService: service)
         cell.configure(with: cellVM)
         
         return cell

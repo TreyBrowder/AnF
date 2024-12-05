@@ -15,14 +15,16 @@ class CellViewModel {
     let rawBottomDescription: String?
     let backgroundImageURL: String
     private(set) var loadedImage: UIImage?
+    private let imageService: CardDataProtocol
     
     // MARK: - Initializer
-    init(card: ExploreCard) {
+    init(card: ExploreCard, imageService: CardDataProtocol) {
         self.title = card.title
         self.topDescription = card.topDescription
         self.promoMessage = card.promoMessage
         self.rawBottomDescription = card.bottomDescription
         self.backgroundImageURL = card.backgroundImage
+        self.imageService = imageService
     }
     
     // MARK: - Business Logic
@@ -32,28 +34,14 @@ class CellViewModel {
             return loadedImage
         }
         
-        guard let url = URL(string: backgroundImageURL) else {
-            print("DEBUG: Invalid URL: \(backgroundImageURL)")
-            return nil
-        }
+//        guard let url = URL(string: backgroundImageURL) else {
+//            print("DEBUG: Invalid URL: \(backgroundImageURL)")
+//            return nil
+//        }
         
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            
-            // Validate HTTP response
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
-                print("DEBUG: Failed to load image. HTTP Status Code: \(httpResponse.statusCode)")
-                return nil
-            }
-            
-            // Validate image data
-            guard let image = UIImage(data: data) else {
-                print("DEBUG: Failed to create UIImage from data")
-                return nil
-            }
-            
-            // Cache the image
-            self.loadedImage = image
+            let image = try await imageService.fetchImage(for: backgroundImageURL)
+            self.loadedImage = image // Cache the image
             return image
         } catch {
             print("DEBUG: Failed to fetch image: \(error.localizedDescription)")
