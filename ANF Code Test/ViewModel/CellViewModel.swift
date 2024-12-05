@@ -14,7 +14,7 @@ class CellViewModel {
     let promoMessage: String?
     let rawBottomDescription: String?
     let backgroundImageURL: String
-    private(set) var loadedImage: UIImage?
+   // private(set) var loadedImage: UIImage?
     private let imageService: CardDataProtocol
     
     // MARK: - Initializer
@@ -29,19 +29,14 @@ class CellViewModel {
     
     // MARK: - Business Logic
     func fetchBackgroundImage() async -> UIImage? {
-        // Return cached image if already loaded
-        if let loadedImage = loadedImage {
-            return loadedImage
-        }
         
-//        guard let url = URL(string: backgroundImageURL) else {
-//            print("DEBUG: Invalid URL: \(backgroundImageURL)")
-//            return nil
-//        }
+        if let cachedImage = await ImageCache.shared.get(key: backgroundImageURL) {
+            return cachedImage
+        }
         
         do {
             let image = try await imageService.fetchImage(for: backgroundImageURL)
-            self.loadedImage = image // Cache the image
+            await ImageCache.shared.set(image: image, key: backgroundImageURL)
             return image
         } catch {
             print("DEBUG: Failed to fetch image: \(error.localizedDescription)")
@@ -83,7 +78,6 @@ class CellViewModel {
                 attributedString.append(linkText)
             }
         }
-        
         return attributedString
     }
 }

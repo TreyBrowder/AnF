@@ -27,8 +27,6 @@ class CardDataViewModel {
     func getCardData() async {
         do {
             let data = try await service.fetchCardData()
-            //print("Result: - \(data)")
-            
             
             await MainActor.run {
                 self.exploreDataArr = data

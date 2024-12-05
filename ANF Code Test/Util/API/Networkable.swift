@@ -9,6 +9,7 @@ import UIKit
 
 protocol Networkable {
     func fetchData<T: Decodable>(as type: T.Type, with endpoint: String) async throws -> T
+    func fetchImage(from url: String) async throws -> UIImage
 }
 
 extension Networkable {
