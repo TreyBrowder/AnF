@@ -157,17 +157,37 @@ class ExploreCardTableViewCell: UITableViewCell {
         promoMessageLabel.text = card.promoMessage
         
         if let bottomDescription = card.bottomDescription {
-            let attributedString = NSMutableAttributedString(string: "In stores & online. Exclusions apply. ")
-            
-            if let range = bottomDescription.range(of: "See Details"),
-               let hrefStart = bottomDescription.range(of: "href=\""),
-               let hrefEnd = bottomDescription.range(of: "\">", range: hrefStart.upperBound..<bottomDescription.endIndex) {
-                let url = String(bottomDescription[hrefStart.upperBound..<hrefEnd.lowerBound])
-                attributedString.append(NSAttributedString(string: "See Details", attributes: [.link: URL(string: url)!, .foregroundColor: UIColor.blue]))
-            }
-            bottomDescriptionLabel.attributedText = attributedString
+            bottomDescriptionLabel.attributedText = createAttributedBottomDescription(from: bottomDescription)
         } else {
             bottomDescriptionLabel.text = nil
         }
+    }
+    
+    private func createAttributedBottomDescription(from description: String) -> NSAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        // Base attributes for the text
+        let attributedString = NSMutableAttributedString(string: "In stores & online. Exclusions apply. ", attributes: [
+            .paragraphStyle: paragraphStyle,
+            .font: UIFont.systemFont(ofSize: 12),
+            .foregroundColor: UIColor.gray
+        ])
+        
+        // Extract the "See Details" hyperlink
+        if let _ = description.range(of: "See Details"),
+           let hrefStart = description.range(of: "href=\""),
+           let hrefEnd = description.range(of: "\">", range: hrefStart.upperBound..<description.endIndex) {
+            let url = String(description[hrefStart.upperBound..<hrefEnd.lowerBound])
+            let linkText = NSAttributedString(string: "See Details", attributes: [
+                .link: URL(string: url)!,
+                .foregroundColor: UIColor.blue,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+                .paragraphStyle: paragraphStyle
+            ])
+            attributedString.append(linkText)
+        }
+        
+        return attributedString
     }
 }
