@@ -5,31 +5,7 @@
 
 import UIKit
 
-extension ANFExploreCardTableViewController: CardDataViewModelDelegate {
-    func didUpdateData(_ viewModel: CardDataViewModel) {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    func didReceiveError(_ viewModel: CardDataViewModel, error: String) {
-        DispatchQueue.main.async {
-            print("Error: \(error)")
-            //TODO: - Handle Error
-        }
-    }
-}
-
 class ANFExploreCardTableViewController: UITableViewController {
-    private var exploreData: [[AnyHashable: Any]]? {
-        if let filePath = Bundle.main.path(forResource: "exploreData", ofType: "json"),
-           let fileContent = try? Data(contentsOf: URL(fileURLWithPath: filePath)),
-           let jsonDictionary = try? JSONSerialization.jsonObject(with: fileContent, options: .mutableContainers) as? [[AnyHashable: Any]] {
-            return jsonDictionary
-        }
-        return nil
-    }
-    
     private let service = CardDataService()
     private lazy var cardVM = CardDataViewModel(service: service)
     
@@ -63,5 +39,20 @@ class ANFExploreCardTableViewController: UITableViewController {
         cell.configure(with: cellVM)
         
         return cell
+    }
+}
+
+extension ANFExploreCardTableViewController: CardDataViewModelDelegate {
+    func didUpdateData(_ viewModel: CardDataViewModel) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func didReceiveError(_ viewModel: CardDataViewModel, error: String) {
+        DispatchQueue.main.async {
+            print("Error: \(error)")
+            //TODO: - Handle Error
+        }
     }
 }
