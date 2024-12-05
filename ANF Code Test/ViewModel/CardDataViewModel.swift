@@ -27,11 +27,15 @@ class CardDataViewModel {
     func getCardData() async {
         do {
             let data = try await service.fetchCardData()
-            print("Result: - \(data)")
+            //print("Result: - \(data)")
+            
+            
             await MainActor.run {
                 self.exploreDataArr = data
                 self.delegate?.didUpdateData(self)
             }
+            
+            print(exploreDataArr)
         } catch {
             guard let err = error as? APIError else { return }
             print("DEBUG - ERROR: - \(err.errMsg)")

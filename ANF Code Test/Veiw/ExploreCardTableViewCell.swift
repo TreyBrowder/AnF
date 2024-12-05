@@ -15,36 +15,60 @@ class ExploreCardTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private let topDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        label.textColor = .darkGray
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        return label
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textColor = .white
-        label.numberOfLines = 2
+        label.textColor = .black
+        label.numberOfLines = 0
+        label.textAlignment = .center
         return label
     }()
     
     private let promoMessageLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .red
         label.numberOfLines = 1
-        return label
-    }()
-    
-    private let topDescriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .white
-        label.numberOfLines = 1
+        label.textAlignment = .center
         return label
     }()
     
     private let bottomDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = .lightGray
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .gray
         label.numberOfLines = 0
+        label.textAlignment = .center
         return label
+    }()
+    
+    private let shopMenButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Shop Men", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.cornerRadius = 5
+        return button
+    }()
+    
+    private let shopWomenButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Shop Women", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.cornerRadius = 5
+        return button
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -59,49 +83,72 @@ class ExploreCardTableViewCell: UITableViewCell {
     
     private func setupViews() {
         contentView.addSubview(backgroundImageView)
+        contentView.addSubview(topDescriptionLabel)
         contentView.addSubview(titleLabel)
         contentView.addSubview(promoMessageLabel)
-        contentView.addSubview(topDescriptionLabel)
         contentView.addSubview(bottomDescriptionLabel)
+        contentView.addSubview(shopMenButton)
+        contentView.addSubview(shopWomenButton)
     }
     
     private func setupConstraints() {
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        topDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         promoMessageLabel.translatesAutoresizingMaskIntoConstraints = false
-        topDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         bottomDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        shopMenButton.translatesAutoresizingMaskIntoConstraints = false
+        shopWomenButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            // Background Image
             backgroundImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             backgroundImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             backgroundImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            backgroundImageView.heightAnchor.constraint(equalToConstant: 200),
             
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            promoMessageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            promoMessageLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            promoMessageLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            
-            topDescriptionLabel.topAnchor.constraint(equalTo: promoMessageLabel.bottomAnchor, constant: 8),
+            // Top Description
+            topDescriptionLabel.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: 8),
             topDescriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             topDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
-            bottomDescriptionLabel.topAnchor.constraint(equalTo: topDescriptionLabel.bottomAnchor, constant: 8),
+            // Title
+            titleLabel.topAnchor.constraint(equalTo: topDescriptionLabel.bottomAnchor, constant: 4),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            // Promo Message
+            promoMessageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            promoMessageLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            promoMessageLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            // Bottom Description
+            bottomDescriptionLabel.topAnchor.constraint(equalTo: promoMessageLabel.bottomAnchor, constant: 4),
             bottomDescriptionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             bottomDescriptionLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            bottomDescriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            
+            // Shop Men Button
+            shopMenButton.topAnchor.constraint(equalTo: bottomDescriptionLabel.bottomAnchor, constant: 12),
+            shopMenButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            shopMenButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            shopMenButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            // Shop Women Button
+            shopWomenButton.topAnchor.constraint(equalTo: shopMenButton.bottomAnchor, constant: 12),
+            shopWomenButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            shopWomenButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            shopWomenButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            // Bottom Padding
+            shopWomenButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
     
     func configure(with card: ExploreCard) {
+        backgroundImageView.image = UIImage(named: card.backgroundImage)
+        topDescriptionLabel.text = card.topDescription
         titleLabel.text = card.title
         promoMessageLabel.text = card.promoMessage
-        topDescriptionLabel.text = card.topDescription
         bottomDescriptionLabel.text = card.bottomDescription
-        backgroundImageView.image = UIImage(named: card.backgroundImage)
     }
 }
