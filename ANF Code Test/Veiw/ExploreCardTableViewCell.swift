@@ -171,4 +171,20 @@ class ExploreCardTableViewCell: UITableViewCell {
             }
         }
     }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        preserveTextViewAppearance()
+    }
+
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        preserveTextViewAppearance()
+    }
+
+    private func preserveTextViewAppearance() {
+        // Ensure the text view maintains its text color and background color
+        bottomDescriptionLabel.textColor = .gray
+        bottomDescriptionLabel.backgroundColor = .clear
+    }
 }
