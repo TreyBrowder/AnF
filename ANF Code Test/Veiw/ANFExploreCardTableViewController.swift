@@ -5,18 +5,22 @@
 
 import UIKit
 
-class ANFExploreCardTableViewController: UITableViewController {
-    
-    private let cardVM = CardDataViewModel(service: CardDataService())
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        Task {
-            await cardVM.getCardData()
+extension ANFExploreCardTableViewController: CardDataViewModelDelegate {
+    func didUpdateData(_ viewModel: CardDataViewModel) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
     }
+    
+    func didReceiveError(_ viewModel: CardDataViewModel, error: String) {
+        DispatchQueue.main.async {
+            print("Error: \(error)")
+            //TODO: - Handle Error
+        }
+    }
+}
 
+class ANFExploreCardTableViewController: UITableViewController {
     private var exploreData: [[AnyHashable: Any]]? {
         if let filePath = Bundle.main.path(forResource: "exploreData", ofType: "json"),
          let fileContent = try? Data(contentsOf: URL(fileURLWithPath: filePath)),
@@ -24,6 +28,25 @@ class ANFExploreCardTableViewController: UITableViewController {
             return jsonDictionary
         }
         return nil
+    }
+    
+    private let cardVM = CardDataViewModel(service: CardDataService())
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUpTable()
+        setDelegate()
+        
+        Task { await cardVM.getCardData() }
+    }
+    
+    private func setUpTable() {
+        tableView.register(ExploreCardTableViewCell.self, forCellReuseIdentifier: "exploreCardCell")
+        tableView.rowHeight = UITableView.automaticDimension
+    }
+    
+    private func setDelegate() {
+        cardVM.delegate = self
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -7,11 +7,18 @@
 
 import Foundation
 
+protocol CardDataViewModelDelegate: AnyObject {
+    func didUpdateData(_ viewModel: CardDataViewModel)
+    func didReceiveError(_ viewModel: CardDataViewModel, error: String)
+}
+
 class CardDataViewModel {
-    @Published var exploreDataArr = [ExploreCard]()
-    @Published var errorMsg: String?
+    
+    private(set) var exploreDataArr = [ExploreCard]()
+    private(set) var errorMsg: String?
     
     private let service: CardDataProtocol
+    weak var delegate: CardDataViewModelDelegate?
     
     init(service: CardDataProtocol) {
         self.service = service
@@ -23,12 +30,14 @@ class CardDataViewModel {
             print("Result: - \(data)")
             await MainActor.run {
                 self.exploreDataArr = data
+                self.delegate?.didUpdateData(self)
             }
         } catch {
             guard let err = error as? APIError else { return }
             print("DEBUG - ERROR: - \(err.errMsg)")
             await MainActor.run {
                 self.errorMsg = err.errMsg
+                self.delegate?.didReceiveError(self, error: err.errMsg)
             }
         }
     }
