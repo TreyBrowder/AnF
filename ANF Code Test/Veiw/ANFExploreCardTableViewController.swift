@@ -57,7 +57,10 @@ class ANFExploreCardTableViewController: UITableViewController {
         let card = cardVM.exploreDataArr[indexPath.row]
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "exploreCardCell", for: indexPath) as? ExploreCardTableViewCell else { return UITableViewCell() }
         
-        cell.configure(with: card)
+        
+        let cellVM = CellViewModel(card: card)
+        cell.configure(with: cellVM)
+        
         return cell
     }
 }

@@ -150,42 +150,144 @@ class ExploreCardTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(with card: ExploreCard) {
-        backgroundImageView.image = UIImage(named: card.backgroundImage)
-        topDescriptionLabel.text = card.topDescription
-        titleLabel.text = card.title
-        promoMessageLabel.text = card.promoMessage
-        
-        if let bottomDescription = card.bottomDescription {
-            bottomDescriptionLabel.attributedText = createAttributedBottomDescription(from: bottomDescription)
-        } else {
-            bottomDescriptionLabel.text = nil
+    func configure(with viewModel: CellViewModel) {
+        // Set default placeholder image
+        backgroundImageView.image = UIImage(named: "placeholder")
+
+        // Assign text properties
+        titleLabel.text = viewModel.title
+        topDescriptionLabel.text = viewModel.topDescription
+        promoMessageLabel.text = viewModel.promoMessage
+        bottomDescriptionLabel.attributedText = viewModel.createAttributedBottomDescription()
+
+        // Fetch and set the background image asynchronously
+        Task {
+            if let image = await viewModel.fetchBackgroundImage() {
+                DispatchQueue.main.async {
+                    self.backgroundImageView.image = image
+                }
+            } else {
+                print("DEBUG: Failed to load image for URL: \(viewModel.backgroundImageURL)")
+            }
         }
     }
     
-    private func createAttributedBottomDescription(from description: String) -> NSAttributedString {
+//    private func createAttributedBottomDescription(from description: String) -> NSAttributedString {
+//        let paragraphStyle = NSMutableParagraphStyle()
+//        paragraphStyle.alignment = .center
+//        
+//        // Base attributes for the text
+//        let attributedString = NSMutableAttributedString(string: "In stores & online. Exclusions apply. ", attributes: [
+//            .paragraphStyle: paragraphStyle,
+//            .font: UIFont.systemFont(ofSize: 12),
+//            .foregroundColor: UIColor.gray
+//        ])
+//        
+//        // Extract the "See Details" hyperlink
+//        if let _ = description.range(of: "See Details"),
+//           let hrefStart = description.range(of: "href=\""),
+//           let hrefEnd = description.range(of: "\">", range: hrefStart.upperBound..<description.endIndex) {
+//            let url = String(description[hrefStart.upperBound..<hrefEnd.lowerBound])
+//            let linkText = NSAttributedString(string: "See Details", attributes: [
+//                .link: URL(string: url)!,
+//                .foregroundColor: UIColor.blue,
+//                .underlineStyle: NSUnderlineStyle.single.rawValue,
+//                .paragraphStyle: paragraphStyle
+//            ])
+//            attributedString.append(linkText)
+//        }
+//        
+//        return attributedString
+//    }
+}
+
+class CellViewModel {
+    // MARK: - Properties
+    let title: String
+    let topDescription: String?
+    let promoMessage: String?
+    let rawBottomDescription: String?
+    let backgroundImageURL: String
+    private(set) var loadedImage: UIImage?
+    
+    // MARK: - Initializer
+    init(card: ExploreCard) {
+        self.title = card.title
+        self.topDescription = card.topDescription
+        self.promoMessage = card.promoMessage
+        self.rawBottomDescription = card.bottomDescription
+        self.backgroundImageURL = card.backgroundImage
+    }
+    
+    // MARK: - Business Logic
+    func fetchBackgroundImage() async -> UIImage? {
+        // Return cached image if already loaded
+        if let loadedImage = loadedImage {
+            return loadedImage
+        }
+        
+        guard let url = URL(string: backgroundImageURL) else {
+            print("DEBUG: Invalid URL: \(backgroundImageURL)")
+            return nil
+        }
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            // Validate HTTP response
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+                print("DEBUG: Failed to load image. HTTP Status Code: \(httpResponse.statusCode)")
+                return nil
+            }
+            
+            // Validate image data
+            guard let image = UIImage(data: data) else {
+                print("DEBUG: Failed to create UIImage from data")
+                return nil
+            }
+            
+            // Cache the image
+            self.loadedImage = image
+            return image
+        } catch {
+            print("DEBUG: Failed to fetch image: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    func createAttributedBottomDescription() -> NSAttributedString? {
+        guard let description = rawBottomDescription else { return nil }
+        
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
         // Base attributes for the text
-        let attributedString = NSMutableAttributedString(string: "In stores & online. Exclusions apply. ", attributes: [
-            .paragraphStyle: paragraphStyle,
-            .font: UIFont.systemFont(ofSize: 12),
-            .foregroundColor: UIColor.gray
-        ])
+        let attributedString = NSMutableAttributedString(
+            string: "In stores & online. Exclusions apply. ",
+            attributes: [
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont.systemFont(ofSize: 12),
+                .foregroundColor: UIColor.gray
+            ]
+        )
         
         // Extract the "See Details" hyperlink
         if let _ = description.range(of: "See Details"),
            let hrefStart = description.range(of: "href=\""),
            let hrefEnd = description.range(of: "\">", range: hrefStart.upperBound..<description.endIndex) {
             let url = String(description[hrefStart.upperBound..<hrefEnd.lowerBound])
-            let linkText = NSAttributedString(string: "See Details", attributes: [
-                .link: URL(string: url)!,
-                .foregroundColor: UIColor.blue,
-                .underlineStyle: NSUnderlineStyle.single.rawValue,
-                .paragraphStyle: paragraphStyle
-            ])
-            attributedString.append(linkText)
+            if let validURL = URL(string: url) {
+                let linkText = NSAttributedString(
+                    string: "See Details",
+                    attributes: [
+                        .link: validURL,
+                        .foregroundColor: UIColor.blue,
+                        .underlineStyle: NSUnderlineStyle.single.rawValue,
+                        .paragraphStyle: paragraphStyle
+                    ]
+                )
+                attributedString.append(linkText)
+            }
         }
         
         return attributedString
