@@ -10,19 +10,16 @@ import XCTest
 class ANFExploreCardTableViewControllerTests: XCTestCase {
     
     var mockService: MockCardDataService!
-    var cardVM: CardDataViewModel!
     var vc: ANFExploreCardTableViewController!
     
     override func setUp() {
         mockService = MockCardDataService(mockData: testCardData)
-        cardVM = CardDataViewModel(service: mockService)
         vc = ANFExploreCardTableViewController(service: mockService)
         vc.loadViewIfNeeded()
     }
     
     override func tearDown() {
         mockService = nil
-        cardVM = nil
         vc = nil
     }
     
@@ -32,27 +29,28 @@ class ANFExploreCardTableViewControllerTests: XCTestCase {
         vc.loadViewIfNeeded()
         
         // Act
-        Task { await vc.cardVM.getCardData() } 
+        Task { await vc.cardVM.getCardData() }
+
+        // Assert
+        XCTAssertEqual(vc.numberOfSections(in: vc.tableView), 1, "Table view should have 1 section")
+    }
+    
+    
+    func test_numberOfRows_ShouldBeThree() {
+        let expectation = XCTestExpectation(description: "Table view should reload after data is fetched")
+        vc.cardVM.delegate = vc
+        
+        // Act
+        Task {
+            await vc.cardVM.getCardData()
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 2.0)
         
         // Assert
-        XCTAssertEqual(vc.numberOfSections(in: vc.tableView), 1, "Table view should have exactly 1 section")
+        let numberOfRows = vc.tableView.numberOfRows(inSection: 0)
+        XCTAssertEqual(numberOfRows, 3, "Table view should have 3 rows")
     }
     
-    
-    func test_numberOfRows_ShouldBeTen() {
-        //        let numberOfRows = testInstance.tableView(testInstance.tableView, numberOfRowsInSection: 0)
-        //        XCTAssert(numberOfRows == 10, "table view should have 10 cells")
-    }
-    
-    func test_cellForRowAtIndexPath_titleText_shouldNotBeBlank() {
-        //        let firstCell = testInstance.tableView(testInstance.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
-        //        let title = firstCell.viewWithTag(1) as? UILabel
-        //        XCTAssert(title?.text?.count ?? 0 > 0, "title should not be blank")
-    }
-    
-    func test_cellForRowAtIndexPath_ImageViewImage_shouldNotBeNil() {
-        //        let firstCell = testInstance.tableView(testInstance.tableView, cellForRowAt: IndexPath(row: 0, section: 0))
-        //        let imageView = firstCell.viewWithTag(2) as? UIImageView
-        //        XCTAssert(imageView?.image != nil, "image view image should not be nil")
-    }
 }

@@ -17,11 +17,12 @@ final class MockCardDataService: Sendable, Networkable, CardDataProtocol {
     }
     
     func fetchCardData() async throws -> [ExploreCard] {
-        try await Task.sleep(nanoseconds: 1_000_000_000)
+        try await Task.sleep(nanoseconds: 200_000_000)
         if let error = mockError { throw error }
         
         do {
             let result = try JSONDecoder().decode([ExploreCard].self, from: mockData ?? testCardData)
+            print("DEBUG - LOG: Mock data contains \(result.count) items")
             return result
         } catch {
             throw APIError.JSONParseError
@@ -31,7 +32,6 @@ final class MockCardDataService: Sendable, Networkable, CardDataProtocol {
     func fetchImage(for imgStr: String) async throws -> UIImage {
         try await Task.sleep(nanoseconds: 1_000_000_000)
         if let error = mockError { throw error }
-        
         guard let image = UIImage(named: imgStr) else {
             throw APIError.invalidData(msg: "Failed to create UIImage")
         }

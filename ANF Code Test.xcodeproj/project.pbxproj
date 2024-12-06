@@ -25,6 +25,13 @@
 			remoteGlobalIDString = 3E727ECE26727088006C11AC;
 			remoteInfo = "ANF Code Test";
 		};
+		EBA0E87F2D0366E7002C3D1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E727EC726727088006C11AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E727ECE26727088006C11AC;
+			remoteInfo = "ANF Code Test";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +46,7 @@
 		3E727EE92672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANFExploreCardTableViewControllerTests.swift; sourceTree = "<group>"; };
 		3E727EEB2672708B006C11AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EBA0E8572D026C1B002C3D1E /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
+		EBA0E8792D0366E7002C3D1E /* ANF Code TestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ANF Code TestUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -47,6 +55,7 @@
 		EBA0E7D62D01FE87002C3D1E /* ViewModel */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ViewModel; sourceTree = "<group>"; };
 		EBA0E7D72D02077E002C3D1E /* Service */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Service; sourceTree = "<group>"; };
 		EBA0E7DA2D0207B8002C3D1E /* Util */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Util; sourceTree = "<group>"; };
+		EBA0E87A2D0366E7002C3D1E /* ANF Code TestUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "ANF Code TestUITests"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +73,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EBA0E8762D0366E7002C3D1E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -72,6 +88,7 @@
 			children = (
 				3E727ED126727088006C11AC /* ANF Code Test */,
 				3E727EE82672708B006C11AC /* ANF Code TestTests */,
+				EBA0E87A2D0366E7002C3D1E /* ANF Code TestUITests */,
 				3E727ED026727088006C11AC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,6 +98,7 @@
 			children = (
 				3E727ECF26727088006C11AC /* ANF Code Test.app */,
 				3E727EE52672708B006C11AC /* ANF Code TestTests.xctest */,
+				EBA0E8792D0366E7002C3D1E /* ANF Code TestUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,6 +176,29 @@
 			productReference = 3E727EE52672708B006C11AC /* ANF Code TestTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		EBA0E8782D0366E7002C3D1E /* ANF Code TestUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EBA0E8812D0366E7002C3D1E /* Build configuration list for PBXNativeTarget "ANF Code TestUITests" */;
+			buildPhases = (
+				EBA0E8752D0366E7002C3D1E /* Sources */,
+				EBA0E8762D0366E7002C3D1E /* Frameworks */,
+				EBA0E8772D0366E7002C3D1E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EBA0E8802D0366E7002C3D1E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				EBA0E87A2D0366E7002C3D1E /* ANF Code TestUITests */,
+			);
+			name = "ANF Code TestUITests";
+			packageProductDependencies = (
+			);
+			productName = "ANF Code TestUITests";
+			productReference = EBA0E8792D0366E7002C3D1E /* ANF Code TestUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -165,7 +206,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					3E727ECE26727088006C11AC = {
@@ -173,6 +214,10 @@
 					};
 					3E727EE42672708B006C11AC = {
 						CreatedOnToolsVersion = 12.5;
+						TestTargetID = 3E727ECE26727088006C11AC;
+					};
+					EBA0E8782D0366E7002C3D1E = {
+						CreatedOnToolsVersion = 16.0;
 						TestTargetID = 3E727ECE26727088006C11AC;
 					};
 				};
@@ -192,6 +237,7 @@
 			targets = (
 				3E727ECE26727088006C11AC /* ANF Code Test */,
 				3E727EE42672708B006C11AC /* ANF Code TestTests */,
+				EBA0E8782D0366E7002C3D1E /* ANF Code TestUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -208,6 +254,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3E727EE32672708B006C11AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EBA0E8772D0366E7002C3D1E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -236,6 +289,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EBA0E8752D0366E7002C3D1E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -243,6 +303,11 @@
 			isa = PBXTargetDependency;
 			target = 3E727ECE26727088006C11AC /* ANF Code Test */;
 			targetProxy = 3E727EE62672708B006C11AC /* PBXContainerItemProxy */;
+		};
+		EBA0E8802D0366E7002C3D1E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E727ECE26727088006C11AC /* ANF Code Test */;
+			targetProxy = EBA0E87F2D0366E7002C3D1E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -464,6 +529,51 @@
 			};
 			name = Release;
 		};
+		EBA0E8822D0366E7002C3D1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NT57WH95JN;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.TreyBrowder.ANF-Code-TestUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "ANF Code Test";
+			};
+			name = Debug;
+		};
+		EBA0E8832D0366E7002C3D1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NT57WH95JN;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.TreyBrowder.ANF-Code-TestUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "ANF Code Test";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -490,6 +600,15 @@
 			buildConfigurations = (
 				3E727EFD2672708B006C11AC /* Debug */,
 				3E727EFE2672708B006C11AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EBA0E8812D0366E7002C3D1E /* Build configuration list for PBXNativeTarget "ANF Code TestUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EBA0E8822D0366E7002C3D1E /* Debug */,
+				EBA0E8832D0366E7002C3D1E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

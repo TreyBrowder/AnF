@@ -12,6 +12,7 @@ class ExploreCardTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.accessibilityIdentifier = "ExploreCardBackgroundImageView"
         return imageView
     }()
     
@@ -30,6 +31,7 @@ class ExploreCardTableViewCell: UITableViewCell {
         label.textColor = .black
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.accessibilityIdentifier = "ExploreCardTitleLabel"
         return label
     }()
     
