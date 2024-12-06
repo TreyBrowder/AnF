@@ -45,6 +45,21 @@ class ANFExploreCardTableViewController: UITableViewController {
         await cardVM.getCardData()
     }
     
+    private func handleError(_ message: String) {
+        let alert = UIAlertController(
+            title: "Error",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
+            Task(priority: .background) {
+                await self.fetchData()
+            }
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+    
     // MARK: - UITableViewDataSource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cardVM.exploreDataArr.count
@@ -66,15 +81,14 @@ class ANFExploreCardTableViewController: UITableViewController {
 // MARK: - CardDataViewModelDelegate
 extension ANFExploreCardTableViewController: CardDataViewModelDelegate {
     func didUpdateData(_ viewModel: CardDataViewModel) {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.tableView.reloadData()
         }
     }
     
     func didReceiveError(_ viewModel: CardDataViewModel, error: String) {
-        DispatchQueue.main.async {
-            print("Error: \(error)")
-            // TODO: Handle Error UI
+        Task { @MainActor in
+            self.handleError(error)
         }
     }
 }

@@ -53,4 +53,5 @@ class ANFExploreCardTableViewControllerTests: XCTestCase {
         XCTAssertEqual(numberOfRows, 3, "Table view should have 3 rows")
     }
     
+    
 }
