@@ -8,7 +8,6 @@
 import UIKit
 
 final class MockCardDataService: Sendable, Networkable, CardDataProtocol {
-    
     let mockData: Data?
     let mockError: APIError?
     

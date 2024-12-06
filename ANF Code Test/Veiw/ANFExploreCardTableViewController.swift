@@ -9,6 +9,7 @@ class ANFExploreCardTableViewController: UITableViewController {
     private let service: CardDataProtocol
     lazy var cardVM = CardDataViewModel(service: service)
     
+    // MARK: - Initializer
     init(service: CardDataProtocol = CardDataService()) {
         self.service = service
         super.init(style: .plain)
@@ -18,14 +19,19 @@ class ANFExploreCardTableViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
         setDelegate()
         
-        Task { await cardVM.getCardData() }
+        // Fetch data
+        Task {
+            await fetchData()
+        }
     }
     
+    // MARK: - Private Methods
     private func setUpTable() {
         tableView.register(ExploreCardTableViewCell.self, forCellReuseIdentifier: "exploreCardCell")
         tableView.rowHeight = UITableView.automaticDimension
@@ -35,14 +41,20 @@ class ANFExploreCardTableViewController: UITableViewController {
         cardVM.delegate = self
     }
     
+    private func fetchData() async {
+        await cardVM.getCardData()
+    }
+    
+    // MARK: - UITableViewDataSource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cardVM.exploreDataArr.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let card = cardVM.exploreDataArr[indexPath.row]
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "exploreCardCell", for: indexPath) as? ExploreCardTableViewCell else { return UITableViewCell() }
-        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "exploreCardCell", for: indexPath) as? ExploreCardTableViewCell else {
+            return UITableViewCell()
+        }
         
         let cellVM = CellViewModel(card: card, imageService: service)
         cell.configure(with: cellVM)
@@ -51,6 +63,7 @@ class ANFExploreCardTableViewController: UITableViewController {
     }
 }
 
+// MARK: - CardDataViewModelDelegate
 extension ANFExploreCardTableViewController: CardDataViewModelDelegate {
     func didUpdateData(_ viewModel: CardDataViewModel) {
         DispatchQueue.main.async {
@@ -61,7 +74,7 @@ extension ANFExploreCardTableViewController: CardDataViewModelDelegate {
     func didReceiveError(_ viewModel: CardDataViewModel, error: String) {
         DispatchQueue.main.async {
             print("Error: \(error)")
-            //TODO: - Handle Error
+            // TODO: Handle Error UI
         }
     }
 }
