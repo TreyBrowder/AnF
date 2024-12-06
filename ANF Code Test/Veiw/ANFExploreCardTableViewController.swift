@@ -6,8 +6,17 @@
 import UIKit
 
 class ANFExploreCardTableViewController: UITableViewController {
-    private let service = CardDataService()
-    private lazy var cardVM = CardDataViewModel(service: service)
+    private let service: CardDataProtocol
+    lazy var cardVM = CardDataViewModel(service: service)
+    
+    init(service: CardDataProtocol = CardDataService()) {
+        self.service = service
+        super.init(style: .plain)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
