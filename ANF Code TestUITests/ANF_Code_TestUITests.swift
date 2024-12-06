@@ -40,4 +40,36 @@ final class ANF_Code_TestUITests: XCTestCase {
         // Assert: Ensure the image view exists
         XCTAssertTrue(firstCellImageView.exists, "The image view in the first cell should exist.")
     }
+    
+    func test_shopMenButtonExists() {
+        let fistCell = app.tables.cells.element(boundBy: 0)
+        
+        let firstCellButtons = fistCell.buttons["Shop Men"]
+        XCTAssertTrue(firstCellButtons.exists)
+    }
+    
+    func test_shopWomenButtonExists() {
+        let fistCell = app.tables.cells.element(boundBy: 0)
+        
+        let firstCellButtons = fistCell.buttons["Shop Women"]
+        XCTAssertTrue(firstCellButtons.exists)
+    }
+    
+    func test_shopNowButtonExists() {
+        let SecondCell = app.tables.cells.element(boundBy: 1)
+        
+        let cellButtons = SecondCell.buttons["Shop Now"]
+        
+        XCTAssertTrue(cellButtons.exists)
+    }
+    
+    func test_shopMenWomenButtonDontExists() {
+        let SecondCell = app.tables.cells.element(boundBy: 1)
+        
+        let cellMenButton = SecondCell.buttons["Shop Men"]
+        let cellWomenButton = SecondCell.buttons["Shop Women"]
+        
+        XCTAssertFalse(cellMenButton.exists)
+        XCTAssertFalse(cellWomenButton.exists)
+    }
 }

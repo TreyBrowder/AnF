@@ -10,10 +10,12 @@ import UIKit
 final class MockCardDataService: Sendable, Networkable, CardDataProtocol {
     let mockData: Data?
     let mockError: APIError?
+    let mockImg: UIImage?
     
-    init(mockData: Data? = nil, mockError: APIError? = nil) {
+    init(mockData: Data? = nil, mockError: APIError? = nil, mockImg: UIImage? = nil) {
         self.mockData = mockData
         self.mockError = mockError
+        self.mockImg = mockImg
     }
     
     func fetchCardData() async throws -> [ExploreCard] {
@@ -30,8 +32,13 @@ final class MockCardDataService: Sendable, Networkable, CardDataProtocol {
     }
     
     func fetchImage(for imgStr: String) async throws -> UIImage {
-        try await Task.sleep(nanoseconds: 1_000_000_000)
+        try await Task.sleep(nanoseconds: 200_000_000) // Reduced delay for testing
         if let error = mockError { throw error }
+        
+        if let image = mockImg {
+            return image
+        }
+        
         guard let image = UIImage(named: imgStr) else {
             throw APIError.invalidData(msg: "Failed to create UIImage")
         }
