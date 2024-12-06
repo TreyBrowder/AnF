@@ -29,7 +29,6 @@ class CellViewModel {
     
     // MARK: - Business Logic
     func fetchBackgroundImage() async -> UIImage? {
-        
         if let cachedImage = await ImageCache.shared.get(key: backgroundImageURL) {
             return cachedImage
         }

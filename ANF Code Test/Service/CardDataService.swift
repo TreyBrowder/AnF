@@ -33,9 +33,7 @@ actor CardDataService: Networkable, CardDataProtocol {
     
     func fetchCardData() async throws -> [ExploreCard] {
         guard let endpoint = allCardsUrlStr else { throw APIError.invalidURL }
-        
         return try await fetchData(as: [ExploreCard].self, with: endpoint)
-        
     }
     
     func fetchImage(for url: String) async throws -> UIImage {
