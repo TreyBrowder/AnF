@@ -8,11 +8,13 @@
 import UIKit
 
 class ExploreCardTableViewCell: UITableViewCell {
+    // MARK: - UI Components
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.accessibilityIdentifier = "ExploreCardBackgroundImageView"
+        imageView.image = UIImage(named: "placeholder")
         return imageView
     }()
     
@@ -66,6 +68,7 @@ class ExploreCardTableViewCell: UITableViewCell {
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.cornerRadius = 5
+        button.isHidden = true
         return button
     }()
     
@@ -76,19 +79,39 @@ class ExploreCardTableViewCell: UITableViewCell {
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.black.cgColor
         button.layer.cornerRadius = 5
+        button.isHidden = true
         return button
     }()
     
+    private let shopNowButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Shop Now", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
+        button.layer.cornerRadius = 5
+        button.isHidden = true
+        return button
+    }()
+    
+    // MARK: - URL Properties
+    private var shopMenURL: URL?
+    private var shopWomenURL: URL?
+    private var shopNowURL: URL?
+    
+    // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
         setupConstraints()
+        setupActions()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Setup Methods
     private func setupViews() {
         contentView.addSubview(backgroundImageView)
         contentView.addSubview(topDescriptionLabel)
@@ -97,6 +120,7 @@ class ExploreCardTableViewCell: UITableViewCell {
         contentView.addSubview(bottomDescriptionLabel)
         contentView.addSubview(shopMenButton)
         contentView.addSubview(shopWomenButton)
+        contentView.addSubview(shopNowButton)
     }
     
     private func setupConstraints() {
@@ -107,6 +131,7 @@ class ExploreCardTableViewCell: UITableViewCell {
         bottomDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         shopMenButton.translatesAutoresizingMaskIntoConstraints = false
         shopWomenButton.translatesAutoresizingMaskIntoConstraints = false
+        shopNowButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             // Background Image
@@ -147,33 +172,71 @@ class ExploreCardTableViewCell: UITableViewCell {
             shopWomenButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             shopWomenButton.heightAnchor.constraint(equalToConstant: 40),
             
-            // Bottom Padding
-            shopWomenButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            // Shop Now Button
+            shopNowButton.topAnchor.constraint(equalTo: shopWomenButton.bottomAnchor, constant: 12),
+            shopNowButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            shopNowButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            shopNowButton.heightAnchor.constraint(equalToConstant: 40),
+            shopNowButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
     
-    func configure(with viewModel: CellViewModel) {
-        // Set default placeholder image
-        backgroundImageView.image = UIImage(named: "placeholder")
-
+    private func setupActions() {
+        shopMenButton.addTarget(self, action: #selector(didTapShopMen), for: .touchUpInside)
+        shopWomenButton.addTarget(self, action: #selector(didTapShopWomen), for: .touchUpInside)
+        shopNowButton.addTarget(self, action: #selector(didTapShopNow), for: .touchUpInside)
+    }
+    
+    // MARK: - Button Actions
+    @objc private func didTapShopMen() {
+        if let url = shopMenURL {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapShopWomen() {
+        if let url = shopWomenURL {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapShopNow() {
+        if let url = shopNowURL {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    // MARK: - Configuration
+    func configure(with cellVM: CellViewModel) {
         // Assign text properties
-        titleLabel.text = viewModel.title
-        topDescriptionLabel.text = viewModel.topDescription
-        promoMessageLabel.text = viewModel.promoMessage
-        bottomDescriptionLabel.attributedText = viewModel.createAttributedBottomDescription()
+        titleLabel.text = cellVM.title
+        topDescriptionLabel.text = cellVM.topDescription
+        promoMessageLabel.text = cellVM.promoMessage
+        bottomDescriptionLabel.attributedText = cellVM.createAttributedBottomDescription()
+
+        // Assign URLs for buttons
+        shopMenURL = cellVM.shopMenURL
+        shopWomenURL = cellVM.shopWomenURL
+        shopNowURL = cellVM.shopNowURL
+
+        // Toggle visibility of buttons
+        shopMenButton.isHidden = shopMenURL == nil
+        shopWomenButton.isHidden = shopWomenURL == nil
+        shopNowButton.isHidden = shopNowURL == nil
 
         // Fetch and set the background image asynchronously
         Task {
-            if let image = await viewModel.fetchBackgroundImage() {
+            if let image = await cellVM.fetchBackgroundImage() {
                 DispatchQueue.main.async {
                     self.backgroundImageView.image = image
                 }
             } else {
-                print("DEBUG: Failed to load image for URL: \(viewModel.backgroundImageURL)")
+                print("DEBUG: Failed to load image for URL: \(cellVM.backgroundImageURL)")
             }
         }
     }
     
+    // MARK: - Preserve TextView Appearance
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         preserveTextViewAppearance()
@@ -185,7 +248,6 @@ class ExploreCardTableViewCell: UITableViewCell {
     }
 
     private func preserveTextViewAppearance() {
-        // Ensure the text view maintains its text color and background color
         bottomDescriptionLabel.textColor = .gray
         bottomDescriptionLabel.backgroundColor = .clear
     }

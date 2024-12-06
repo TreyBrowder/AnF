@@ -14,8 +14,11 @@ class CellViewModel {
     let promoMessage: String?
     let rawBottomDescription: String?
     let backgroundImageURL: String
-   // private(set) var loadedImage: UIImage?
     private let imageService: CardDataProtocol
+    
+    let shopMenURL: URL?
+    let shopWomenURL: URL?
+    let shopNowURL: URL?
     
     // MARK: - Initializer
     init(card: ExploreCard, imageService: CardDataProtocol) {
@@ -25,6 +28,13 @@ class CellViewModel {
         self.rawBottomDescription = card.bottomDescription
         self.backgroundImageURL = card.backgroundImage
         self.imageService = imageService
+        
+        let shopMenItem = card.content?.first { $0.title == "Shop Men" }
+        let shopWomenItem = card.content?.first { $0.title == "Shop Women" }
+        self.shopMenURL = shopMenItem.flatMap { URL(string: $0.target) }
+        self.shopWomenURL = shopWomenItem.flatMap { URL(string: $0.target) }
+        let shopNowItem = card.content?.first { $0.title == "SHOP NOW" }
+        self.shopNowURL = shopNowItem.flatMap { URL(string: $0.target) }
     }
     
     // MARK: - Business Logic
